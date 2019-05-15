@@ -1,0 +1,16 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD com.example.Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="BuyRecordMapper">
+
+	<select id="isBought" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		select user_id userId,audio_id audioId from buy_record 
+		where user_id = #{userId} and audio_id = #{audioId}
+	</select>
+
+	<insert id="addBuyRecord" parameterType="java.util.HashMap">
+		insert into buy_record(user_id,audio_id,creat_time) values(#{userId},#{audioId},#{creatTime})
+	</insert>
+
+</mapper>

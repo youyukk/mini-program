@@ -1,0 +1,11 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD com.example.Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="QuestionMapper">
+
+	<select id="getQuestion" resultType="java.util.HashMap">
+		select id,question_name questionName from question where is_user=0 order by creat_time asc limit 1
+	</select>
+
+</mapper>

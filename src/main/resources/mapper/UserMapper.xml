@@ -1,0 +1,131 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD com.example.Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="UserMapper">
+	
+	<select id="selectUserByOpenId" parameterType="java.lang.String" resultType="java.util.HashMap">
+		select * from audiouser where openid=#{openId}
+	</select>
+	
+	<insert id="addUser" parameterType="java.util.HashMap">
+		insert into audiouser
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="nickName != null">
+				nick_name,
+			</if>
+			<if test="sex != null">
+				sex,
+			</if>
+			<if test="age != null">
+				age,
+			</if>
+			<if test="shareCount != null">
+				share_count,
+			</if>
+			<if test="openId != null">
+				openid,
+			</if>
+			<if test="sessionKey != null">
+				session_key,
+			</if>
+			<if test="md5SessionKey != null">
+				md5_session_key,
+			</if>
+			<if test="playCount != null">
+				play_count,
+			</if>
+			<if test="mostPlayCount != null">
+				most_play_count,
+			</if>
+			<if test="freeCoin != null">
+				free_coin,
+			</if>
+			<if test="questionCoin != null">
+				question_coin,
+			</if>
+			<if test="profession != null">
+				profession,
+			</if>
+		</trim> 
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="nickName != null">
+				#{nickName},
+			</if>
+			<if test="sex != null">
+				#{sex},
+			</if>
+			<if test="age != null">
+				#{age},
+			</if>
+			<if test="shareCount != null">
+				#{shareCount},
+			</if>
+			<if test="openId != null">
+				#{openId},
+			</if>
+			<if test="sessionKey != null">
+				#{sessionKey},
+			</if>
+			<if test="md5SessionKey != null">
+				#{md5SessionKey},
+			</if>
+			<if test="playCount != null">
+				#{playCount},
+			</if>
+			<if test="mostPlayCount != null">
+				#{mostPlayCount},
+			</if>
+			<if test="freeCoin != null">
+				#{freeCoin},
+			</if>
+			<if test="questionCoin != null">
+				#{questionCoin},
+			</if>
+			<if test="profession != null">
+				#{profession},
+			</if>
+		</trim>
+	</insert>
+	
+	<update id="updateSessionKey" parameterType="java.util.HashMap">
+		update audiouser set session_key=#{sessionKey} where openid=#{openId}
+	</update>
+	
+	<select id="selectFreeCoinByOpenId" parameterType="java.lang.String" resultType="int">
+		select free_coin freeCoin from audiouser where openid=#{openId}
+	</select>
+	
+	<select id="SelectQuestionCoinByOpenId" parameterType="java.lang.String" resultType="int">
+		select question_coin questionCoin from audiouser where openid=#{openId}
+	</select>
+	
+	<update id="updateCoinCountByOpenId" parameterType="java.lang.String">
+		update audiouser set coin_count = coin_count+1 where openid=#{openId}
+	</update>
+	
+	<update id="updateFreeCoinByOpenId" parameterType="java.lang.String">
+		update audiouser set free_coin = 1 where openid=#{openId}
+	</update>
+
+	<update id="updateQuestionByOpenId" parameterType="java.lang.String">
+		update audiouser set question_coin = 1 where openid=#{openId}
+	</update>
+	
+	<select id="selectCoinCount" parameterType="java.lang.String" resultType="int">
+		select coin_count coinCount from audiouser where openid = #{openId}
+	</select>
+	
+	<update id="reduceCoinByUserId" parameterType="java.lang.String">
+		update audiouser set coin_count = coin_count - 1 where openid = #{userId}
+	</update>
+	
+	<update id="clearFreeCoin">
+		update audiouser set free_coin = 0
+	</update>
+	
+	<update id="clearQuestionCoin">
+		update audiouser set question_coin = 0
+	</update>
+	
+</mapper>
