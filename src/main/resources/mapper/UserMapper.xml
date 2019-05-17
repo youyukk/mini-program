@@ -14,8 +14,17 @@
 			<if test="nickName != null">
 				nick_name,
 			</if>
-			<if test="sex != null">
-				sex,
+			<if test="gender != null">
+				gender,
+			</if>
+			<if test="province != null">
+				province,
+			</if>
+			<if test="city != null">
+				city,
+			</if>
+			<if test="country != null">
+				country,
 			</if>
 			<if test="age != null">
 				age,
@@ -47,13 +56,25 @@
 			<if test="profession != null">
 				profession,
 			</if>
+			<if test="creatTime != null">
+				creat_time,
+			</if>
 		</trim> 
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="nickName != null">
 				#{nickName},
 			</if>
-			<if test="sex != null">
-				#{sex},
+			<if test="gender != null">
+				#{gender},
+			</if>
+			<if test="province != null">
+				#{province},
+			</if>
+			<if test="city != null">
+				#{city},
+			</if>
+			<if test="country != null">
+				#{country},
 			</if>
 			<if test="age != null">
 				#{age},
@@ -84,6 +105,9 @@
 			</if>
 			<if test="profession != null">
 				#{profession},
+			</if>
+			<if test="creatTime != null">
+				#{creatTime},
 			</if>
 		</trim>
 	</insert>

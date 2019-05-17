@@ -3,9 +3,13 @@ spring:
     name: smallChese
   datasource:
         name: smallChese
-        url: jdbc:mysql://cdb-6k8q46bp.gz.tencentcdb.com:10127/manuscript?characterEncoding=utf-8&useSSL=true
+#        url: jdbc:mysql://cdb-6k8q46bp.gz.tencentcdb.com:10127/manuscript?characterEncoding=utf-8&useSSL=true
+#        username: root
+#        password: C2eGdA6n8i@()
+
+        url: jdbc:mysql://localhost:3306/practice?characterEncoding=utf-8&useSSL=true
         username: root
-        password: C2eGdA6n8i@()
+        password: mysql
         # 使用druid数据源
         type: com.alibaba.druid.pool.DruidDataSource
         driver-class-name: com.mysql.jdbc.Driver
@@ -22,12 +26,15 @@ spring:
 mybatis: 
   mapper-locations: classpath:/mapper/*.xml
   
-server:
+server: 
+  max-http-header-size: 100000
   port: 8888
   servlet:
     context-path: /
   tomcat:
     uri-encoding: UTF-8
+    max-http-post-size: -1
+    max-swallow-size: 10000
     
 http: 
   maxTotal: 100
