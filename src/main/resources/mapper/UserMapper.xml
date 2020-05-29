@@ -4,6 +4,10 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="UserMapper">
 	
+	<select id="selectOpenIdBySessionId" parameterType="java.lang.String" resultType="java.lang.String">
+		select openid from audiouser where session_id = #{sessionId}
+	</select>
+	
 	<select id="selectUserByOpenId" parameterType="java.lang.String" resultType="java.util.HashMap">
 		select * from audiouser where openid=#{openId}
 	</select>
@@ -38,8 +42,8 @@
 			<if test="sessionKey != null">
 				session_key,
 			</if>
-			<if test="md5SessionKey != null">
-				md5_session_key,
+			<if test="sessionId != null">
+				session_id,
 			</if>
 			<if test="playCount != null">
 				play_count,
@@ -88,8 +92,8 @@
 			<if test="sessionKey != null">
 				#{sessionKey},
 			</if>
-			<if test="md5SessionKey != null">
-				#{md5SessionKey},
+			<if test="sessionId != null">
+				#{sessionId},
 			</if>
 			<if test="playCount != null">
 				#{playCount},
@@ -112,8 +116,8 @@
 		</trim>
 	</insert>
 	
-	<update id="updateSessionKey" parameterType="java.util.HashMap">
-		update audiouser set session_key=#{sessionKey} where openid=#{openId}
+	<update id="updateSession" parameterType="java.util.HashMap">
+		update audiouser set session_key=#{sessionKey},session_id=#{sessionId} where openid=#{openId}
 	</update>
 	
 	<select id="selectFreeCoinByOpenId" parameterType="java.lang.String" resultType="int">
@@ -137,11 +141,11 @@
 	</update>
 	
 	<select id="selectCoinCount" parameterType="java.lang.String" resultType="int">
-		select coin_count coinCount from audiouser where openid = #{openId}
+		select coin_count coinCount from audiouser where openId = #{openId}
 	</select>
 	
-	<update id="reduceCoinByUserId" parameterType="java.lang.String">
-		update audiouser set coin_count = coin_count - 1 where openid = #{userId}
+	<update id="reduceCoinByOpenId" parameterType="java.lang.String">
+		update audiouser set coin_count = coin_count - 1 where openid = #{openId}
 	</update>
 	
 	<update id="clearFreeCoin">
@@ -151,5 +155,9 @@
 	<update id="clearQuestionCoin">
 		update audiouser set question_coin = 0
 	</update>
+	
+	<select id="checkSessionId" parameterType="java.lang.String" resultType="java.lang.String">
+		select session_id sessionId from audiouser where session_id = #{sessionId}
+	</select>
 	
 </mapper>

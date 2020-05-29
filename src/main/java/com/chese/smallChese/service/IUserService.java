@@ -7,6 +7,13 @@ import org.apache.ibatis.annotations.Param;
 public interface IUserService {
 
 	/**
+	 * 根据sessionId查询openId
+	 * @param sessionId
+	 * @return
+	 */
+	String selectOpenIdBySessionId(String sessionId);
+	
+	/**
 	 * 新增用户
 	 * @param map
 	 */
@@ -20,10 +27,10 @@ public interface IUserService {
 	Map<String,Object> selectUserByOpenId(@Param("openId") String openId);
 	
 	/**
-	 * 更改session_key
+	 * 更改session_key和session_id
 	 * @param map
 	 */
-	void updateSessionKey(Map map);
+	void updateSession(Map<String,Object> map);
 	
 	/**
 	 * 根据openID查领取免费虚拟币的状态值
@@ -74,7 +81,7 @@ public interface IUserService {
 	 * 减去用户芝士币数量
 	 * @param userId
 	 */
-	void reduceCoinByUserId(String userId);
+	void reduceCoinByOpenId(String openId);
 	
 	/**
 	 * 清除所有用户免费币的数量
@@ -85,4 +92,11 @@ public interface IUserService {
 	 * 清除所有用户问题币的数量
 	 */
 	void clearQuestionCoin();
+	
+	/**
+	 * 检查是否存在sessionId
+	 * @param sessionId
+	 * @return
+	 */
+	boolean checkSessionId(String sessionId);
 }

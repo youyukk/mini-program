@@ -4,6 +4,6 @@ import java.util.Map;
 
 public interface IQuestionService {
 	
-	Map getQuestion();
+	Map<String,Object> getQuestion();
 
 }

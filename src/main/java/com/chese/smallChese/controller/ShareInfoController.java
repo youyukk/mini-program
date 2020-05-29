@@ -24,21 +24,30 @@ public class ShareInfoController {
 	
 	@RequestMapping("addShareInfo")
 	@ResponseBody
-	public int addShareInfo(String openId,Integer audioId){
+	public int addShareInfo(String sessionId,Integer audioId){
 		System.out.println("addShareInfo is be used");
-		if(openId != null && openId != ""){
+		if(sessionId != null && sessionId != ""){
 			
-			Map<String,Object> map = new HashMap<String,Object>();
-			map.put("userId", openId);
-			map.put("audioId", audioId);
-			map.put("creatTime", FormatTimeUtil.getTimestamp());
-			userService.updateCoinCountByOpenId(openId);
-			shareInfoService.addShareInfo(map);
-			System.out.println("share succussful");
-			return 1;
+			/**根据sessionId查询openId*/
+			String openId = userService.selectOpenIdBySessionId(sessionId);
+			if(openId != null && openId != ""){
+				Map<String,Object> map = new HashMap<String,Object>();
+				map.put("openId", openId);
+				map.put("audioId", audioId);
+				map.put("creatTime", FormatTimeUtil.getTimestamp());
+				userService.updateCoinCountByOpenId(openId);
+				shareInfoService.addShareInfo(map);
+				System.out.println("share succussful");
+				return 1;				
+			}else{
+				System.out.println("sessionId : " + sessionId + "不存在或已过期，请重新申请");
+				return 0;
+			}
+			
+		}else{
+			System.out.println("sessionId 为空，请检查");
+			return 0;
 		}
-		
-		return 0;
 	}
 	
 	

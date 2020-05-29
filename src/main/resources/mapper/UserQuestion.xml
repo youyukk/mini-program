@@ -5,7 +5,7 @@
 <mapper namespace="UserQuestionMapper">
 
 	<insert id="addUserQuestion" parameterType="java.util.HashMap">
-		insert into user_answer(user_id,question_id,user_answer,create_time)
+		insert into user_answer(openid,question_id,user_answer,create_time)
 		values(#{openId},#{questionId},#{answer},#{createTime})
 	</insert>
 

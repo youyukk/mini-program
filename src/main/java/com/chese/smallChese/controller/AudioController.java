@@ -25,12 +25,24 @@ public class AudioController {
 	public JSONArray findAudios(){
 		System.out.println("findAudios be used");
 		List<Map<String,Object>> list = audioService.findAudios();
+		
+		JSONArray jsonArray = null;
+		
 		if(list != null){
-			JSONArray jsonArray = JSONArray.fromObject(list);
-			return jsonArray;			
-		}else{
-			return null;
+			//循环修改标题长度，如果长度超过15个字符，超出的部分用 ...替代
+			for(int i = 0; i < list.size(); i++){
+				Map<String,Object> map = list.get(i);
+				String name = map.get("name").toString();
+				if(name.length() > 17){
+					String str = name.substring(0, 17);
+					name = str + " . . .";
+					map.put("name", name);
+				}
+			}
+			jsonArray = JSONArray.fromObject(list);			
 		}
+		
+		return jsonArray;
 	}
 	
 	@RequestMapping("findAudioById")

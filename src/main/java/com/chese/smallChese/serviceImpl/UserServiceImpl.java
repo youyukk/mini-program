@@ -18,6 +18,21 @@ public class UserServiceImpl implements IUserService{
 	private String nameSpace = "UserMapper";
 	
 	@Override
+	public String selectOpenIdBySessionId(String sessionId){
+		
+		String openId = null;
+		
+		try {
+			openId = (String)baseDao.selectOne(nameSpace + ".selectOpenIdBySessionId", sessionId);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return openId;
+	}
+	
+	@Override
 	public void addUser(Map<String,Object> map) {
 		
 		try {
@@ -34,7 +49,7 @@ public class UserServiceImpl implements IUserService{
 
 		Map<String,Object> userResult = new HashMap<>();
 		try {
-			 userResult = (Map<String, Object>)baseDao.selectOne("UserMapper.selectUserByOpenId", openId);
+			 userResult = (Map<String, Object>)baseDao.selectOne(nameSpace + ".selectUserByOpenId", openId);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -43,9 +58,10 @@ public class UserServiceImpl implements IUserService{
 	}
 
 	@Override
-	public void updateSessionKey(Map map){
+	public void updateSession(Map<String,Object> map){
+		System.out.println("service执行updateSession");
 		try {
-			baseDao.update("UserMapper.updateSessionKey", map);
+			baseDao.update(nameSpace + ".updateSession", map);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -126,9 +142,13 @@ public class UserServiceImpl implements IUserService{
 	
 	@Override
 	public int selectCoinCount(String openId){
-		int coinCount = -1;
+		int coinCount = 0;
 		try {
-			coinCount = (int)baseDao.selectOne(nameSpace + ".selectCoinCount", openId);
+			Object selectOne = baseDao.selectOne(nameSpace + ".selectCoinCount", openId);
+			if(selectOne != null){
+				coinCount = (int)selectOne;				
+			}
+			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -138,9 +158,9 @@ public class UserServiceImpl implements IUserService{
 	}
 	
 	@Override
-	public void reduceCoinByUserId(String userId){
+	public void reduceCoinByOpenId(String openId){
 		try {
-			baseDao.update(nameSpace + ".reduceCoinByUserId", userId);
+			baseDao.update(nameSpace + ".reduceCoinByOpenId", openId);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -168,5 +188,24 @@ public class UserServiceImpl implements IUserService{
 		}
 	}
 	
+	@Override
+	public boolean checkSessionId(String sessionId){
+		
+		String session = null;
+		boolean result = false;
+		try {
+			session = (String)baseDao.selectOne(nameSpace + ".checkSessionId", sessionId);
+			
+			if(session != null && session != ""){
+				result = true;
+			}
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
 	
 }

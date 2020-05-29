@@ -1,7 +1,5 @@
 package com.chese.smallChese.controller;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,33 +20,45 @@ public class CoinController {
 	
 	@RequestMapping("checkFreeCoin")
 	@ResponseBody
-	public int checkFreeCoin(String openId){
-		System.out.println("调用checkFreeCoin,openId = " + openId);
+	public int checkFreeCoin(String sessionId){
+		System.out.println("调用checkFreeCoin,sessionId = " + sessionId);
+		String openId = userService.selectOpenIdBySessionId(sessionId);
+		int freeCoin = 0;
 		
-		int freeCoin = userService.selectFreeCoinByOpenId(openId);
-		System.out.println("freeCoin:" + freeCoin);
+		if(openId != null && openId != ""){
+			freeCoin = userService.selectFreeCoinByOpenId(openId);
+			System.out.println("freeCoin:" + freeCoin);
+			
+		}else{
+			System.out.println("sessionId : " + sessionId + "已过期，请重新申请");			
+		}
+		
 		return freeCoin;
 	}
 	
 	
 	@RequestMapping("getFreeCoin")
 	@ResponseBody
-	public int getFreeCoin(String openId){
+	public int getFreeCoin(String sessionId){
 		System.out.println("调用getFreeCoin");
-		try {
-			/**更改免费币的状态值*/
-			userService.updateFreeCoinByOpenId(openId);
-			/**更改虚拟币总值*/
-			userService.updateCoinCountByOpenId(openId);
-			
-			return 1;
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			
-			return 0;
+		String openId = userService.selectOpenIdBySessionId(sessionId);
+		if(openId != null && openId != ""){
+			try {
+				/**更改免费币的状态值*/
+				userService.updateFreeCoinByOpenId(openId);
+				/**更改虚拟币总值*/
+				userService.updateCoinCountByOpenId(openId);
+				
+				return 1;
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}else{
+			System.out.println("sessionId : " + sessionId + "已过期，请重新申请");						
 		}
 		
+		return 0;
 	}
 	
 	/**
@@ -58,36 +68,48 @@ public class CoinController {
 	 */
 	@RequestMapping("checkQuestionCoin")
 	@ResponseBody
-	public int checkQuestionCoin(String openId){
+	public int checkQuestionCoin(String sessionId){
 		System.out.println("调用checkQuestionCoin");
-		
-		int questionCoin = userService.selectQuestionCoinByOpenId(openId);
+		String openId = userService.selectOpenIdBySessionId(sessionId);
+		int questionCoin = 0;
+		if(openId != null && openId != ""){
+			questionCoin = userService.selectQuestionCoinByOpenId(sessionId);			
+		}else{
+			System.out.println("sessionId : " + sessionId + "已过期，请重新申请");			
+		}
 		
 		return questionCoin;
 	}
 
 	@RequestMapping("getQuestionCoin")
 	@ResponseBody
-	public int getQuestionCoin(String openId,int questionId,int answer){
+	public int getQuestionCoin(String sessionId,int questionId,int answer){
 		System.out.println("调用getQuestionCoin");
 
 		try {
-			/**修改问题币的状态值*/
-			userService.updateQuestionByOpenId(openId);
-			/**修改虚拟币的总值*/
-			userService.updateCoinCountByOpenId(openId);
 			
 			/**新增用户回答的问题及答案*/
 			Map<String,Object> paramMap = new HashMap<String,Object>();
-			
-			paramMap.put("openId",openId);
-			paramMap.put("questionId",questionId);
-			paramMap.put("answer",answer);
-			String createTime = FormatTimeUtil.getTimestamp();
-			paramMap.put("createTime", createTime);
-			userService.addUserQuestion(paramMap);
-			
-			return 1;
+			String openId = userService.selectOpenIdBySessionId(sessionId);
+			if(openId != null && openId != ""){
+				
+				/**修改问题币的状态值*/
+				userService.updateQuestionByOpenId(openId);
+				/**修改虚拟币的总值*/
+				userService.updateCoinCountByOpenId(openId);
+				
+				paramMap.put("openId",openId);
+				paramMap.put("questionId",questionId);
+				paramMap.put("answer",answer);
+				String createTime = FormatTimeUtil.getTimestamp();
+				paramMap.put("createTime", createTime);
+				userService.addUserQuestion(paramMap);
+				
+				return 1;				
+			}else{
+				System.out.println("sessionId : " + sessionId + "已过期，请重新申请");
+				return 0;
+			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -98,18 +120,32 @@ public class CoinController {
 	
 	@RequestMapping("getCoinCount")
 	@ResponseBody
-	public int getCoinCount(String openId){
+	public int getCoinCount(String sessionId){
 		System.out.println("调用getCoinCount");
-		int coinCount = userService.selectCoinCount(openId);
+		
+		String openId = userService.selectOpenIdBySessionId(sessionId);
+		int coinCount = 0;
+		if(openId != null && openId != ""){
+			coinCount = userService.selectCoinCount(openId);			
+		}else{
+			System.out.println("sessionId : " + sessionId + "已过期，请重新申请");
+		}
 		
 		return coinCount;
 	}
 	
 	@RequestMapping("reduceCoinCount")
 	@ResponseBody
-	public int reduceCoinCount(String userId){
+	public int reduceCoinCount(String sessionId){
 		
-		userService.reduceCoinByUserId(userId);
+		String openId = userService.selectOpenIdBySessionId(sessionId);
+		if(openId != null && openId != ""){
+			
+			userService.reduceCoinByOpenId(openId);
+			
+		}else{
+			System.out.println("sessionId : " + sessionId + "已过期，请重新申请");
+		}
 		
 		return 1;
 	}

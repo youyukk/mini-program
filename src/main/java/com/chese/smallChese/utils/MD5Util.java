@@ -3,8 +3,6 @@ package com.chese.smallChese.utils;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import org.apache.commons.codec.digest.MessageDigestAlgorithms;
-
 public class MD5Util {
 	
 	public static String getMD5(String param){

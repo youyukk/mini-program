@@ -19,6 +19,7 @@ public class AudioServiceImpl implements IAudioService {
 	
 	private String namespace = "AudioMapper";
 	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public List<Map<String, Object>> findAudios() {
 		
@@ -34,6 +35,7 @@ public class AudioServiceImpl implements IAudioService {
 		return list;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public Map<String,Object> findAudioById(String id){
 		

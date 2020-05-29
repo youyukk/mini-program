@@ -1,6 +1,5 @@
 package com.chese.smallChese.serviceImpl;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,28 +17,30 @@ public class BuyRecordServiceImpl implements IBuyRecordService {
 	private String namespace = "BuyRecordMapper";
 	
 	@Override
-	public Map<String,Object> isBought(Map<String,Object> map){
+	public Integer isBought(Map<String,Object> map){
 		
-		Map<String,Object> resultMap = new HashMap<String,Object>();
+		Integer result = null;
 		
 		try {
-			resultMap = (Map<String,Object>)baseDao.selectOne(namespace + ".isBought", map);
+			result = (Integer)baseDao.selectOne(namespace + ".isBought", map);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		return resultMap;
+		return result;
 	}
 	
 	@Override
-	public void addBuyRecord(Map<String,Object> map){
+	public int addBuyRecord(Map<String,Object> map){
 		
 		try {
 			baseDao.insert(namespace + ".addBuyRecord", map);
+			return 1;
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return 0;
 		}
 	}
 	

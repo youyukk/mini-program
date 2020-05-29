@@ -7,8 +7,8 @@
 	<insert id="addShareInfo" parameterType="java.util.HashMap">
 		insert into share_info
 		<trim prefix="(" suffix=")" suffixOverrides=",">
-			<if test="userId != null">
-				user_id,
+			<if test="openId != null">
+				openid,
 			</if>
 			<if test="audioId != null">
 				audio_id,
@@ -18,8 +18,8 @@
 			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
-			<if test="userId != null">
-				#{userId},
+			<if test="openId != null">
+				#{openId},
 			</if>
 			<if test="audioId != null">
 				#{audioId},

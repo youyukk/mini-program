@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.chese.smallChese.service.IBuyRecordService;
+import com.chese.smallChese.service.IUserService;
 import com.chese.smallChese.utils.FormatTimeUtil;
 
 @Controller
@@ -18,6 +19,9 @@ public class BuyRecordController {
 
 	@Autowired
 	private IBuyRecordService buyRecordService;
+		
+	@Autowired
+	private IUserService userService;
 	
 	/**
 	 * 
@@ -27,41 +31,59 @@ public class BuyRecordController {
 	 */
 	@RequestMapping("isBought")
 	@ResponseBody
-	public int isBought(String userId,String audioId) {
-		if(userId == null){
-			throw new NullArgumentException(userId);
-		}else if(audioId == null){
-			throw new NullArgumentException(audioId);
+	public int isBought(String sessionId,int audioId) {
+		if(sessionId == null || sessionId == ""){
+			throw new NullArgumentException(sessionId);
 		}
 		
-		Map<String,Object> map = new HashMap<String,Object>();
-		map.put("userId", userId);
-		map.put("audioId", audioId);
-		
-		Map<String, Object> result = buyRecordService.isBought(map);
-		if(result == null){
-			return 0;
+		String openId = userService.selectOpenIdBySessionId(sessionId);
+		if(openId != null && openId != ""){
+			
+			Map<String,Object> map = new HashMap<String,Object>();
+			map.put("openId", openId);
+			map.put("audioId", audioId);
+			
+			Integer result = buyRecordService.isBought(map);
+			if(result != null){
+				//已购买过了
+				return 1;
+			}else{
+				//没购买过
+				return 0;
+			}
+			
 		}else{
-			return 1;
+			System.out.println("sessionId : " + sessionId + "已过期，请重新申请");
+			return 0;
 		}
+		
 	}
 	
 	@RequestMapping("addBuyRecord")
 	@ResponseBody
-	public int addBuyRecord(String userId,String audioId){
-		if(userId == null){
-			throw new NullArgumentException(userId);
-		}else if(audioId == null){
-			throw new NullArgumentException(audioId);
+	public int addBuyRecord(String sessionId,int audioId){
+		if(sessionId == null){
+			throw new NullArgumentException(sessionId);
 		}
 		
-		HashMap<String,Object> map = new HashMap<String,Object>();
-		map.put("userId", userId);
-		map.put("audioId", audioId);
-		map.put("creatTime", FormatTimeUtil.getTimestamp());
+		int result = 0;
 		
-		buyRecordService.addBuyRecord(map);
+		String openId = userService.selectOpenIdBySessionId(sessionId);
+		if(openId != null && openId != ""){
+			
+			HashMap<String,Object> map = new HashMap<String,Object>();
+			map.put("openId", openId);
+			map.put("audioId", audioId);
+			map.put("creatTime", FormatTimeUtil.getTimestamp());
+			result = buyRecordService.addBuyRecord(map);
+			if(result == 1){
+				//减去一个芝士币
+				userService.reduceCoinByOpenId(openId);
+			}
+		}else{
+			System.out.println("sessionId : " + sessionId + "已过期");
+		}
 		
-		return 1;
+		return result;
 	}
 }

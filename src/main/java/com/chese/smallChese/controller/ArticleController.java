@@ -3,7 +3,6 @@ package com.chese.smallChese.controller;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.lang.NullArgumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,34 +24,43 @@ public class ArticleController {
 	
 	@RequestMapping("addArticle")
 	@ResponseBody
-	public int addArticle(String userId,String title,String content){
+	public int addArticle(String sessionId,String title,String content){
 		System.out.println("addArticle is used");
-		if(userId == null || userId == ""){
+		if(sessionId == null || sessionId == ""){
 			//程序异常
 			return -2;
 		}
 		
-		Map<String, Object> map = userService.selectUserByOpenId(userId);
-		if(map == null || map.size() == 0){
-			//该用户不存在
-			return -1;
-		}
-		
-		Map<String,Object> paramMap = new HashMap<String,Object>();
-		paramMap.put("userId", userId);
-		paramMap.put("title", title);
-		paramMap.put("content", content);
-		paramMap.put("creatTime", FormatTimeUtil.getTimestamp());
-		
-		try {
-			articleService.addArticle(paramMap);
-			userService.updateCoinCountByOpenId(userId);
-			return 1;
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		String openId = userService.selectOpenIdBySessionId(sessionId);
+		if(openId != null && openId != ""){
+			Map<String, Object> map = userService.selectUserByOpenId(openId);
+			if(map == null || map.size() == 0){
+				//该用户不存在
+				return -1;
+			}	
+				
+				Map<String,Object> paramMap = new HashMap<String,Object>();
+				paramMap.put("openId", openId);
+				paramMap.put("title", title);
+				paramMap.put("content", content);
+				paramMap.put("creatTime", FormatTimeUtil.getTimestamp());
+				
+				try {
+					articleService.addArticle(paramMap);
+					userService.updateCoinCountByOpenId(openId);
+					return 1;
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					return 0;
+				}
+			
+		}else{
+			System.out.println("sessionId : " + sessionId + "已过期，请重新申请");
 			return 0;
 		}
+		
+		
 	}
 	
 }

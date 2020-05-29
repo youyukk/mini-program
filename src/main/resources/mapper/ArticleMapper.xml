@@ -7,8 +7,8 @@
 	<insert id="addArticle" parameterType="java.util.HashMap">
 		insert into article
 		<trim prefix="(" suffix=")" suffixOverrides=",">
-			<if test="userId != null">
-				user_id,
+			<if test="openId != null">
+				openid,
 			</if>
 			<if test="title != null">
 				title,
@@ -21,8 +21,8 @@
 			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
-			<if test="userId != null">
-				#{userId},
+			<if test="openId != null">
+				#{openId},
 			</if>
 			<if test="title != null">
 				#{title},

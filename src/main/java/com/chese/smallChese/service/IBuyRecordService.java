@@ -9,13 +9,13 @@ public interface IBuyRecordService {
 	 * @param map {user_id,audio_id}
 	 * @return
 	 */
-	Map<String,Object> isBought(Map<String,Object> map);
+	Integer isBought(Map<String,Object> map);
 	
 	/**
 	 * 新增用户购买的音频记录
 	 * @param map
 	 */
-	void addBuyRecord(Map<String,Object> map);
+	int addBuyRecord(Map<String,Object> map);
 	
 	
 	

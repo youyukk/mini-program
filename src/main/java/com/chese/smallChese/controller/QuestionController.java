@@ -18,7 +18,6 @@ public class QuestionController {
 	@Autowired
 	private IQuestionService questionService;
 
-	@SuppressWarnings("unchecked")
 	@RequestMapping("getQuestion")
 	@ResponseBody
 	public JSONObject getQuestion(){
